@@ -1,4 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using MongoDB.Driver;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Linq;
 
 namespace PUT_Backend.Controllers
 {
@@ -12,22 +17,42 @@ namespace PUT_Backend.Controllers
         };
 
         private readonly ILogger<WeatherForecastController> _logger;
+        private readonly IMongoCollection<WeatherForecast> _weatherCollection;
+        private readonly IConfiguration _config;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, IConfiguration config)
         {
             _logger = logger;
+            var connectionString = config.GetSection("DatabaseSettings:MongoConnectionString").Value;
+            var client = new MongoClient(connectionString);
+            var database = client.GetDatabase("sample_mflix");
+            _weatherCollection = database.GetCollection<WeatherForecast>("weatherForecasts");
+            
         }
 
         [HttpGet(Name = "GetWeatherForecast")]
-        public IEnumerable<WeatherForecast> Get()
+        public ActionResult<IEnumerable<WeatherForecast>> Get()
         {
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            var forecastsFromDb = _weatherCollection.Find(_ => true).ToList();
+
+            if (forecastsFromDb.Any())
             {
-                Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-            })
-            .ToArray();
+                return forecastsFromDb;
+            }
+            return NotFound();
+        }
+
+        [HttpPost(Name = "PostWeatherForecast")]
+        public IActionResult Post([FromBody] WeatherForecast newForecast)
+        {
+            if (newForecast == null)
+            {
+                return BadRequest("Weather forecast data is required.");
+            }
+
+            _weatherCollection.InsertOne(newForecast);
+
+            return CreatedAtRoute("GetWeatherForecast", newForecast);
         }
     }
 }
