@@ -1,7 +1,5 @@
 ﻿using MongoDB.Driver;
 using PUT_Backend.Models;
-using Microsoft.Extensions.Configuration;
-using System.Threading.Tasks;
 
 namespace PUT_Backend.Repositories
 {
@@ -19,6 +17,11 @@ namespace PUT_Backend.Repositories
         public async Task<User> GetUserByUsernameAsync(string username)
         {
             return await _users.Find(u => u.Username == username).FirstOrDefaultAsync();
+        }
+
+        public async Task<IEnumerable<User>> GetAllUsersAsync()
+        {
+            return await _users.Find(_ => true).ToListAsync();
         }
     }
 }

@@ -1,9 +1,8 @@
-﻿using System.Threading.Tasks;
 using PUT_Backend.Models;
 
-namespace PUT_Backend.Repositories
+namespace PUT_Backend.Services
 {
-    public interface IUserRepository
+    public interface IUserService
     {
         Task<User> GetUserByUsernameAsync(string username);
         Task<IEnumerable<User>> GetAllUsersAsync();

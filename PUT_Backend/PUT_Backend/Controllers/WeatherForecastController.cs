@@ -8,6 +8,9 @@ using System.Linq;
 
 namespace PUT_Backend.Controllers
 {
+    /// <summary>
+    /// Testing class for API authorization
+    /// </summary>
     [ApiController]
     [Route("[controller]")]
     [Authorize]
@@ -24,6 +27,7 @@ namespace PUT_Backend.Controllers
 
         public WeatherForecastController(ILogger<WeatherForecastController> logger, IConfiguration config)
         {
+            // Acesta este un constructor pentru clasa WeatherForecasstController :)
             _logger = logger;
             var connectionString = config.GetSection("DatabaseSettings:MongoConnectionString").Value;
             var client = new MongoClient(connectionString);
