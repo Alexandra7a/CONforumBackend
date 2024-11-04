@@ -6,10 +6,11 @@ using PUT_Backend.Models;
 namespace PUT_Backend.Controllers
 {
     [ApiController]
-    [Route("postlist")]
+    [Route("api/posts")]
     public class PostContoller : ControllerBase
     {
         private readonly IPostService _postService;
+    
         private readonly int pageSize = 5;
         public PostContoller(IPostService service)
         {
