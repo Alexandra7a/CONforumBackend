@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using PUT_Backend;
 using PUT_Backend.Repositories;
+using PUT_Backend.Repository;
 using PUT_Backend.Services;
 using System.Text;
 
@@ -17,6 +19,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IUserRepository,UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+
+builder.Services.AddScoped<IPostRepository,PostRepository>();
+builder.Services.AddScoped<IPostService,PostService>();
 
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 builder.Services.AddAuthentication(options =>
@@ -65,6 +70,13 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 });
+
+//to map strings not numbers for enum
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+    });
 
 var app = builder.Build();
 
