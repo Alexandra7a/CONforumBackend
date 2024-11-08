@@ -71,6 +71,14 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowLocalhost8000",
+        builder => builder.WithOrigins("http://localhost:8000")
+                          .AllowAnyHeader()
+                          .AllowAnyMethod());
+});
+
 //to map strings not numbers for enum
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
