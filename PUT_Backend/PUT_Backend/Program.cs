@@ -97,6 +97,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseCors("AllowLocalhost8000");
+
 app.UseAuthorization();
 
 app.MapControllers();
