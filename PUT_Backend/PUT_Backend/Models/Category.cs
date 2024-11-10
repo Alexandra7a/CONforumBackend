@@ -4,20 +4,19 @@ namespace PUT_Backend.Models
     public enum Category
     {
         None,
-        GeneralDiscussion,
-        Technology,
-        Entertainment,
-        Sports,
-        Education,
-        HealthAndWellness,
-        Science,
-        JobsAndCareers,
+        GeneralQuestions,
+        ServicesAndAdministration,
         Events,
+        Recommendations,
+        AcademicSupportAndResources,
+        HealthAndWellness,
+        CareerAdvice,
+        Internships,
         ArtAndCulture,
         Travel,
         Gaming,
         BooksAndLiterature,
-        Programming,
+        ComputerScience,
         FinanceAndEconomy
     }
 }
