@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using PUT_Backend.Models;
@@ -14,15 +15,36 @@ namespace PUT_Backend.Repository
 
             var client = new MongoClient(configuration.GetSection("DatabaseSettings:MongoConnectionString").Value);
             var database = client.GetDatabase("put-db");
-            _posts = database.GetCollection<Post>("posts");
+            _posts = database.GetCollection<Post>("posts"); // has all attributes
             //pot aici sa accesez si whole-posts collection?
         }
 
         public async Task<IEnumerable<Post>> GetAllPostsAsync(int pageNumber, int pageSize)
         {
-            var skip = (pageNumber - 1) * pageSize; 
+            var skip = (pageNumber - 1) * pageSize;
 
             var posts = await _posts.Find(_ => true)
+                                    .Skip(skip)
+                                    .Limit(pageSize)
+                                    .ToListAsync();
+            return posts;
+        }
+        public async Task<IEnumerable<ShortPost>> GetAllShortPostsAsync(int pageNumber, int pageSize)
+        {
+            var skip = (pageNumber - 1) * pageSize;
+
+            var posts = await _posts.Find(_ => true)
+                                    .Project(p => new ShortPost
+                                    {
+                                        Id = p.Id,
+                                        Title = p.Title,
+                                        Brief = p.Brief,
+                                        Votes = p.Votes,
+                                        AddedAt = p.AddedAt,
+                                        Categories = p.Categories,
+                                        Anonim = p.Anonim,
+                                        UserId = p.UserId
+                                    })
                                     .Skip(skip)
                                     .Limit(pageSize)
                                     .ToListAsync();
@@ -34,5 +56,6 @@ namespace PUT_Backend.Repository
             return await _posts.Find(i => i.Id == id).FirstOrDefaultAsync();
         }
 
+       
     }
 }

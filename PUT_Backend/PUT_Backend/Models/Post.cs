@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-/*what is seen in the list*/
+/*all post kept in db */
 namespace PUT_Backend.Models
 {
     public class Post
@@ -32,5 +32,14 @@ namespace PUT_Backend.Models
         [BsonElement("user_id")]
         [BsonRepresentation(BsonType.ObjectId)]
         public string UserId { get; set; }
+
+         [BsonElement("content")]
+        public string Content{get; set;}
+
+        [BsonElement("edited")]
+        public bool Edited{get;set;}
+
+        [BsonElement("best_comment_id")]
+        public string BestCommentId{get;set;}
     }
 }
