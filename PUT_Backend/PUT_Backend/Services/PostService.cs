@@ -24,9 +24,9 @@ namespace PUT_Backend
             return await _postRepository.GetAllPostsAsync(pageNumber,pageSize);
         }
 
-        public Task<IEnumerable<ShortPost>> GetAllShortPostsAsync(int pageNumber, int pageSize)
+        public Task<IEnumerable<ShortPost>> GetAllShortPostsAsync(int pageNumber, int pageSize,Category category)
         {
-            return _postRepository.GetAllShortPostsAsync(pageNumber,pageSize);
+            return _postRepository.GetAllShortPostsAsync(pageNumber,pageSize, category);
         }
 
         public async Task<Post> GetPostByIdAsync(string id)

@@ -1,6 +1,8 @@
+using System.Linq.Expressions;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 using PUT_Backend.Models;
 using PUT_Backend.Repositories;
 
@@ -9,6 +11,7 @@ namespace PUT_Backend.Repository
     public class PostRepository : IPostRepository
     {
         private readonly IMongoCollection<Post> _posts;
+
 
         public PostRepository(IConfiguration configuration)
         {
@@ -23,17 +26,21 @@ namespace PUT_Backend.Repository
         {
             var skip = (pageNumber - 1) * pageSize;
 
+
             var posts = await _posts.Find(_ => true)
                                     .Skip(skip)
                                     .Limit(pageSize)
                                     .ToListAsync();
             return posts;
         }
-        public async Task<IEnumerable<ShortPost>> GetAllShortPostsAsync(int pageNumber, int pageSize)
+        public async Task<IEnumerable<ShortPost>> GetAllShortPostsAsync(int pageNumber, int pageSize, Category category)
         {
             var skip = (pageNumber - 1) * pageSize;
+            var filter = category == Category.All
+                ? Builders<Post>.Filter.Empty
+                : Builders<Post>.Filter.In("Categories", new[] { category });
 
-            var posts = await _posts.Find(_ => true)
+            var posts = await _posts.Find(filter)
                                     .Project(p => new ShortPost
                                     {
                                         Id = p.Id,
@@ -48,6 +55,7 @@ namespace PUT_Backend.Repository
                                     .Skip(skip)
                                     .Limit(pageSize)
                                     .ToListAsync();
+
             return posts;
         }
 
@@ -56,6 +64,6 @@ namespace PUT_Backend.Repository
             return await _posts.Find(i => i.Id == id).FirstOrDefaultAsync();
         }
 
-       
+
     }
 }

@@ -3,7 +3,7 @@ namespace PUT_Backend.Models
 {
     public enum Category
     {
-        None,
+        All,
         GeneralQuestions,
         ServicesAndAdministration,
         Events,
