@@ -1,3 +1,4 @@
+using DnsClient.Protocol;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -10,7 +11,7 @@ namespace PUT_Backend.Controllers
     public class PostContoller : ControllerBase
     {
         private readonly IPostService _postService;
-    
+
         private readonly int pageSize = 5;
         public PostContoller(IPostService service)
         {
@@ -18,22 +19,61 @@ namespace PUT_Backend.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ShortPost>>> GetAllShortPosts([FromQuery]Category category=Category.All,[FromQuery] int pageNumber = 1)
+        public async Task<ActionResult<IEnumerable<ShortPost>>> GetAllShortPosts([FromQuery] Category category = Category.All, [FromQuery] int pageNumber = 1)
         {
             if (pageNumber <= 0) pageNumber = 1;
-            
-            var all_posts = await _postService.GetAllShortPostsAsync(pageNumber, pageSize,category);
+
+            var all_posts = await _postService.GetAllShortPostsAsync(pageNumber, pageSize, category);
             if (all_posts.IsNullOrEmpty())
                 return NotFound("No more items to show");
             return Ok(all_posts);
         }
-        
+
         [HttpGet("{id}")]
-        public async Task<ActionResult<Post>> GetPostById(string id){
+        public async Task<ActionResult<Post>> GetPostById(string id)
+        {
             Post post = await _postService.GetPostByIdAsync(id);
-            if(post==null)
-            return NotFound("Post not found");
+            if (post == null)
+                return NotFound("Post not found");
             return post;
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<Post>> CreatePost([FromBody] Post newPost)
+        {
+            var result = await _postService.CreatePost(newPost);
+            if (!result.IsValid)
+                return BadRequest(result.Errors);
+            else
+                return Ok(newPost);
+        }
+
+        //[HttpPut("{id}")]
+        [HttpPut]
+        public async Task<ActionResult<Post>> UpdatePost([FromBody] Post updatePost)
+        {
+            //todo: vezi cum vine de la endpoint . Am nevoie de id, sau doar o postare si extrag eu de acolo ce am nevoie?
+
+            if (updatePost == null)
+                return NotFound("Post not found.");
+
+            var result = await _postService.UpdatePost(updatePost);
+
+            if (!result.IsValid)
+                return BadRequest(result.Errors);
+
+            return Ok(result.Post);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeletePost(string id)
+        {
+            //todo: si aici cum vine endpointul
+            var success = await _postService.DeletePost(id);
+            if (!success)
+                return NotFound("Post not found or could not be deleted.");
+
+            return NoContent();
         }
 
     }
