@@ -12,8 +12,10 @@ namespace PUT_Backend.Models
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
         [BsonElement("title")] 
-        [Required ]
+        
         public string Title { get; set; }
+        
+
         [BsonElement("brief")]
         public string Brief { get; set; }
         [BsonElement("votes")]
