@@ -48,11 +48,9 @@ namespace PUT_Backend.Controllers
                 return Ok(newPost);
         }
 
-        //[HttpPut("{id}")]
         [HttpPut]
         public async Task<ActionResult<Post>> UpdatePost([FromBody] Post updatePost)
         {
-            //todo: vezi cum vine de la endpoint . Am nevoie de id, sau doar o postare si extrag eu de acolo ce am nevoie?
 
             if (updatePost == null)
                 return NotFound("Post not found.");
@@ -68,7 +66,6 @@ namespace PUT_Backend.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeletePost(string id)
         {
-            //todo: si aici cum vine endpointul
             var success = await _postService.DeletePost(id);
             if (!success)
                 return NotFound("Post not found or could not be deleted.");
@@ -79,6 +76,7 @@ namespace PUT_Backend.Controllers
     }
 
 }
+
 /*
 Notes:
 Cand adaugi o postare sa o pun in db in functie de dat sau categorie mai populara.

@@ -44,6 +44,7 @@ namespace PUT_Backend.Repository
         public async Task<IEnumerable<ShortPost>> GetAllShortPostsAsync(int pageNumber, int pageSize, Category category)
         {
             var skip = (pageNumber - 1) * pageSize;
+            
             var filter = category == Category.All
                 ? Builders<Post>.Filter.Empty
                 : Builders<Post>.Filter.In("Categories", new[] { category });
