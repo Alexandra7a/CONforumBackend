@@ -23,6 +23,15 @@ namespace PUT_Backend.Controllers
             this._commentService = commentService;
         }
 
+        [HttpGet("categories")]
+        public async Task<ActionResult<IEnumerable<string>>> GetExistentCategories()
+        {
+            var categories = Enum.GetValues(typeof(Category))
+                                 .Cast<Category>() 
+                                 .Select(c => c.ToString()) 
+                                 .ToList(); 
+            return Ok(categories);
+        }
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ShortPost>>> GetAllShortPosts([FromQuery] Category category = Category.All, [FromQuery] int pageNumber = 1)
         {
@@ -124,42 +133,18 @@ namespace PUT_Backend.Controllers
                 return Ok(newComm);
         }
 
-
-        /*[HttpPut("{id}/comments")]
-        public async Task<ActionResult<Post>> UpdateComment(string id, [FromBody] Comment updateComm)
-        {
-
-            //putem lasa cu put sau sa vad cu patch -> content
-            try
-            {
-                if (UpdateComment == null)
-                    return NotFound("Comment not found.");
-
-                var result = await _commentService.UpdateComment(updateComm);
-
-                if (!result.IsValid)
-                    return BadRequest(result.Errors);
-
-                return Ok(result.Entity);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }*/
-
         [HttpPatch("{id}/comments/{id_comm}")]
-        public async Task<ActionResult> PathComment(string id, string id_comm,JsonPatchDocument<Comment> commentPatch)
+        public async Task<ActionResult> PathComment(string id, string id_comm, JsonPatchDocument<Comment> commentPatch)
         {
-            //patch only with id_comm -> votes
-            if(id_comm.IsNullOrEmpty()){
+            if (id_comm.IsNullOrEmpty())
+            {
                 return BadRequest("id_comm cannot be empty");
             }
             var comment = await _commentService.findComment(id_comm);
-            if(comment==null)
-            return BadRequest("comment not found");
+            if (comment == null)
+                return BadRequest("comment not found");
             commentPatch.ApplyTo(comment);
-            
+
             var result = await _commentService.UpdateComment(comment);
             if (!result.IsValid)
             {
@@ -168,7 +153,6 @@ namespace PUT_Backend.Controllers
             return Ok("Comment updated");
 
         }
-
 
         [HttpDelete("{id}/comments/{id_comm}")]
         public async Task<ActionResult> DeleteComment(string id, string id_comm)
@@ -179,14 +163,6 @@ namespace PUT_Backend.Controllers
 
             return Ok();
         }
-
-
     }
 
 }
-
-/*
-Notes:
-Cand adaugi o postare sa o pun in db in functie de dat sau categorie mai populara.
-O sa vad cum fac cu cele mai populare primele -> poate un filtru cu cele mai populare pe care il alege userul(gen vreau events si sortate dupa cele mai populare. ceva de genul )
-*/
