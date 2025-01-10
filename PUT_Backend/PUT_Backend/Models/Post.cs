@@ -42,6 +42,7 @@ namespace PUT_Backend.Models
         public bool Edited{get;set;}
 
         [BsonElement("best_comment_id")]
+        [BsonRepresentation(BsonType.ObjectId)]
         public string BestCommentId{get;set;}
     }
 }
