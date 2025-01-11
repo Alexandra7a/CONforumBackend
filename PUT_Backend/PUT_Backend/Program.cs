@@ -118,7 +118,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseCors("AllowSpecificOrigin");
+app.UseCors("AllowSpecificOrigins");
 
 //app.UseCors("AllowLocalhost8000");
 
