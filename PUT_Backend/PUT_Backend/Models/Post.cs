@@ -8,6 +8,7 @@ namespace PUT_Backend.Models
 {
     public class Post
     {
+        private static int maxBriefLength = 100;
 
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
@@ -47,8 +48,9 @@ namespace PUT_Backend.Models
         public string BestCommentId { get; set; }
 
 
-        public Post(string title, string content, string userId,List<Category> categories,bool anonim=false)
+        public Post(string title, string content, string userId, List<Category> categories, bool anonim = false)
         {
+            Id = "";
             Title = title;
             Content = content;
             UserId = userId;
@@ -60,9 +62,22 @@ namespace PUT_Backend.Models
                 Categories = categories;
             else
                 Categories = new List<Category>();
-        
+
+            Brief = createBrief(content);
+        }
+
+        public string createBrief(string content)
+        {
+            if (content.Length <= maxBriefLength)
+                return content;
+
             int briefLength = (int)(content.Length * 0.1);
-            Brief = content.Substring(0, Math.Min(briefLength, content.Length))+ "...";
+            string brief = content.Substring(0, Math.Min(maxBriefLength, briefLength));
+
+            if (!content.Equals(brief))
+                brief += "...";
+
+            return brief;
         }
     }
 }
