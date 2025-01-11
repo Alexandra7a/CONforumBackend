@@ -95,6 +95,18 @@ builder.Services.AddControllers()
     });
 
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigins",
+        builder =>
+        {
+            builder.WithOrigins("http://forum.cristit.icu", "http://localhost:8000")
+                   .AllowAnyHeader()
+                   .AllowAnyMethod();
+        });
+});
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -106,7 +118,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseCors("AllowLocalhost8000");
+app.UseCors("AllowSpecificOrigin");
+
+//app.UseCors("AllowLocalhost8000");
+
 
 app.UseAuthorization();
 

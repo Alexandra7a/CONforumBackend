@@ -24,8 +24,6 @@ namespace PUT_Backend.Repository
 
         public async Task<Post> CreatePost(Post newPost)
         {
-            newPost.Id = "";
-
             await _posts.InsertOneAsync(newPost);
 
             return newPost;

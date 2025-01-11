@@ -27,11 +27,12 @@ namespace PUT_Backend.Controllers
         public async Task<ActionResult<IEnumerable<string>>> GetExistentCategories()
         {
             var categories = Enum.GetValues(typeof(Category))
-                                 .Cast<Category>() 
-                                 .Select(c => c.ToString()) 
-                                 .ToList(); 
+                                 .Cast<Category>()
+                                 .Select(c => c.ToString())
+                                 .ToList();
             return Ok(categories);
         }
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ShortPost>>> GetAllShortPosts([FromQuery] Category category = Category.All, [FromQuery] int pageNumber = 1)
         {
@@ -53,13 +54,13 @@ namespace PUT_Backend.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Post>> CreatePost([FromBody] Post newPost)
+        public async Task<ActionResult<Post>> CreatePost([FromBody] CreatePostRequest request)//multiple FromBody are not accepted
         {
-            var result = await _postService.CreatePost(newPost);
+            var result = await _postService.CreatePost(request);
             if (!result.IsValid)
                 return BadRequest(result.Errors);
             else
-                return Ok(newPost);
+                return Ok(result.Post);
         }
 
         [HttpPut]

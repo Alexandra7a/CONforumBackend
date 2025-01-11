@@ -9,7 +9,7 @@ namespace PUT_Backend{
         
          Task<IEnumerable<ShortPost>> GetAllShortPostsAsync(int pageNumber, int pageSize,Category category);
 
-        Task<ValidationResult<Post>>  CreatePost(Post post);
+        Task<ValidationResult<Post>>  CreatePost(CreatePostRequest dto);
 
         Task<ValidationResult<Post>>  UpdatePost(Post updated_post);
         
