@@ -78,6 +78,14 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowLocalhost8000",
+        builder => builder.WithOrigins("http://localhost:8000")
+                          .AllowAnyHeader()
+                          .AllowAnyMethod());
+});
+
 //to map strings not numbers for enum
 builder.Services.AddControllers()
     .AddNewtonsoftJson()
@@ -111,6 +119,9 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseCors("AllowSpecificOrigin");
+
+//app.UseCors("AllowLocalhost8000");
+
 
 app.UseAuthorization();
 
