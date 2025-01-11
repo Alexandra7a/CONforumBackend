@@ -43,9 +43,8 @@ namespace PUT_Backend
             /*Complete the unassigned attributes*/
             int briefLength = (int)(updated_post.Content.Length * 0.1);
             updated_post.Brief = updated_post.Content.Substring(0, Math.Min(briefLength, updated_post.Content.Length));
-            updated_post.AddedAt = DateTime.Now;
             updated_post.Edited = true;
-            updated_post.Votes = 0;
+            
 
             var createdPost = await _postRepository.UpdatePost(updated_post);
 
