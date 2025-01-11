@@ -36,6 +36,7 @@ namespace PUT_Backend
                 return new ValidationResult<Post> { IsValid = false, Errors = errors };
 
             updated_post.Edited = true;
+            updated_post.Brief=updated_post.createBrief(updated_post.Content);
             
             var createdPost = await _postRepository.UpdatePost(updated_post);
 

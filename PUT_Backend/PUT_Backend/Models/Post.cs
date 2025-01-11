@@ -68,14 +68,12 @@ namespace PUT_Backend.Models
 
         public string createBrief(string content)
         {
-            if (content.Length <= maxBriefLength)
-                return content;
-
-            int briefLength = (int)(content.Length * 0.1);
-            string brief = content.Substring(0, Math.Min(maxBriefLength, briefLength));
-
-            if (!content.Equals(brief))
-                brief += "...";
+            if(content.Length<=50 && content.Length>0)
+            return content;
+           // int briefLength = (int)(content.Length * 0.1);
+            //int finalBriefLength = Math.Min(maxBriefLength, briefLength);
+            string brief = content.Substring(0, 50);
+            brief += "...";
 
             return brief;
         }
