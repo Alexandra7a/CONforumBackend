@@ -15,18 +15,13 @@ namespace PUT_Backend
         }
 
 
-        public async Task<ValidationResult<Post>> CreatePost(Post post)
+        public async Task<ValidationResult<Post>> CreatePost(CreatePostRequest dto)
         {
+
+            Post post= new Post(dto.Title,dto.Content,dto.UserId,dto.Categories,dto.Anonim);
             var errors = ValidatePost(post);
             if (errors.Any())
                 return new ValidationResult<Post> { IsValid = false, Errors = errors };
-
-            /*Complete the unassigned attributes*/
-            int briefLength = (int)(post.Content.Length * 0.1);
-            post.Brief = post.Content.Substring(0, Math.Min(briefLength, post.Content.Length));
-            post.AddedAt = DateTime.Now;
-            post.Edited = false;
-            post.Votes = 0;
 
             var createdPost = await _postRepository.CreatePost(post);
 
