@@ -63,6 +63,12 @@ namespace PUT_Backend
             return await _postRepository.GetPostByIdAsync(id);
         }
 
+        public async Task<IEnumerable<Post>> GetPostsByUserAsync(string userId, int pageNumber, int pageSize)
+        {
+            return await _postRepository.GetPostsByUserAsync(userId, pageNumber, pageSize);
+        }
+
+
         private List<string> ValidatePost(Post post)
         {
             var errors = new List<string>();

@@ -56,7 +56,16 @@ namespace PUT_Backend{
             return new ValidationResult<Comment> { IsValid = true, Entity = created };
         }
 
-
+        public async Task<Comment> GetCommentByIdAsync(string id)
+        {
+            // Ensure that the comment exists before returning
+            var comment = await _commentRepository.GetComment(id);
+            if (comment == null)
+            {
+                throw new KeyNotFoundException($"Comment with ID {id} not found.");
+            }
+            return comment;
+        }
 
          private List<string> ValidateComment(Comment comm)
         {

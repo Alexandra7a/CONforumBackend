@@ -10,6 +10,7 @@ namespace PUT_Backend{
         Task<bool> DeletePost(string id_comm);
         Task<IEnumerable<Comment>> GetComments(string id, string parent_id);
         Task<ValidationResult<Comment>> UpdateComment(Comment updateComm);
+        Task<Comment> GetCommentByIdAsync(string id);
         Task<Comment> findComment(string id_comm);
     }
 }

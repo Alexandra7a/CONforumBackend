@@ -11,10 +11,14 @@ namespace PUT_Backend.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IPostService _postService;
+        private readonly ICommentService _commentService;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, IPostService postService, ICommentService commentService)
         {
             _userService = userService;
+            _postService = postService;
+            _commentService = commentService;
         }
 
         [HttpGet]
@@ -43,21 +47,35 @@ namespace PUT_Backend.Controllers
             if (user == null || userData == null)
                 return NotFound("User profile not found.");
 
+            Console.WriteLine($"PostsIds: {string.Join(", ", userData.PostsIds)}");
+
+            if (userData.PostsIds == null || !userData.PostsIds.Any())
+                return NotFound("No posts associated with the user.");
+
+            var userPostsTasks = userData.PostsIds.Select(id => _postService.GetPostByIdAsync(id));
+            var userPosts = await Task.WhenAll(userPostsTasks);
+
+            var likedPostsTasks = userData.LikedPostsIds.Select(id => _postService.GetPostByIdAsync(id));
+            var likedPosts = await Task.WhenAll(likedPostsTasks);
+
+            var commentsTasks = userData.CommentsIds.Select(id => _commentService.GetCommentByIdAsync(id));
+            var comments = await Task.WhenAll(commentsTasks);
+
             var profile = new
             {
-                user.Id,
                 user.Username,
                 user.Email,
                 user.IsAdmin,
                 user.Banned,
-                userData.LikedPostsIds,
-                userData.PostsIds,
-                userData.CommentsIds,
-                userData.StinksNr
+                Posts = userPosts,
+                LikedPosts = likedPosts,
+                Comments = comments,
+                StinksNr = userData.StinksNr
             };
 
             return Ok(profile);
         }
+
 
     }
 }

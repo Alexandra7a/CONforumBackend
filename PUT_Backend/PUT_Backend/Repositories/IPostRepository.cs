@@ -9,6 +9,8 @@ namespace PUT_Backend.Repositories
         
         Task<IEnumerable<ShortPost>> GetAllShortPostsAsync(int pageNumber, int pageSize,Category category);
 
+        Task<IEnumerable<Post>> GetPostsByUserAsync(string userId, int pageNumber, int pageSize);
+
         Task<Post> CreatePost(Post newPost);
         
         Task<Post> UpdatePost(Post updatedPost);
