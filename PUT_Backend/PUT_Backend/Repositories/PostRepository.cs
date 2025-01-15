@@ -71,6 +71,22 @@ namespace PUT_Backend.Repository
             return await _posts.Find(i => i.Id == id).FirstOrDefaultAsync();
         }
 
+        public async Task<IEnumerable<Post>> GetPostsByUserAsync(string userId, int pageNumber, int pageSize)
+        {
+            var skip = (pageNumber - 1) * pageSize;
+
+            var filter = Builders<Post>.Filter.Eq(post => post.UserId, userId);
+
+            var userPosts = await _posts.Find(filter)
+                                        .SortByDescending(post => post.AddedAt)
+                                        .Skip(skip)
+                                        .Limit(pageSize)
+                                        .ToListAsync();
+
+            return userPosts;
+        }
+
+
         public async Task<Post> UpdatePost(Post updatedPost)
         {
             var filter = Builders<Post>.Filter.Eq(p => p.Id, updatedPost.Id);

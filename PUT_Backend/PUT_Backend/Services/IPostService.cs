@@ -13,6 +13,8 @@ namespace PUT_Backend{
 
         Task<ValidationResult<Post>>  UpdatePost(Post updated_post);
         
+        Task<IEnumerable<Post>> GetPostsByUserAsync(string userId, int pageNumber, int pageSize);
+        
          Task<bool> DeletePost(string id);
 
 
