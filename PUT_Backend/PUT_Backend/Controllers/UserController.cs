@@ -8,7 +8,6 @@ namespace PUT_Backend.Controllers
 {
     [ApiController]
     [Route("api/users")]
-    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -35,5 +34,30 @@ namespace PUT_Backend.Controllers
             }
             return Ok(user);
         }
+
+        [HttpGet("profile/{username}")]
+        public async Task<ActionResult<object>> GetUserProfile(string username)
+        {
+            var (user, userData) = await _userService.GetUserProfileAsync(username);
+
+            if (user == null || userData == null)
+                return NotFound("User profile not found.");
+
+            var profile = new
+            {
+                user.Id,
+                user.Username,
+                user.Email,
+                user.IsAdmin,
+                user.Banned,
+                userData.LikedPostsIds,
+                userData.PostsIds,
+                userData.CommentsIds,
+                userData.StinksNr
+            };
+
+            return Ok(profile);
+        }
+
     }
 }

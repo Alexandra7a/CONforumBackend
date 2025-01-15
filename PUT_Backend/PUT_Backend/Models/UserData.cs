@@ -11,7 +11,6 @@ namespace PUT_Backend.Models
         public string Id { get; set; }
 
         [BsonElement("user_id")]
-        [BsonRepresentation(BsonType.ObjectId)]
         public string UserId { get; set; }
 
         [BsonElement("liked_posts_ids")]
