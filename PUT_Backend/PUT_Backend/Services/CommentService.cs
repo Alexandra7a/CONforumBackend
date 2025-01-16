@@ -13,19 +13,14 @@ namespace PUT_Backend{
             this._commentRepository = repository;
         }
 
-        public async  Task<ValidationResult<Comment>> CreateComment(String id,Comment newComm)
+        public async  Task<ValidationResult<Comment>> CreateComment(String id,CreateCommentRequest newComm)
         {
-           var errors = ValidateComment(newComm);
+            var newFullComm = MapRequestToComment(newComm);
+            var errors = ValidateComment(newFullComm);
             if (errors.Any())
                 return new ValidationResult<Comment> { IsValid = false, Errors = errors };
 
-            newComm.PostId=id;
-            newComm.Votes=0;
-            newComm.AddedAt=DateTime.UtcNow;
-            newComm.Edited=false;
-            newComm.IsDeleted=false;
-
-            var created = await _commentRepository.CreateComment(newComm);
+            var created = await _commentRepository.CreateComment(newFullComm);
 
             return new ValidationResult<Comment> { IsValid = true, Entity = created };
         }
@@ -77,6 +72,21 @@ namespace PUT_Backend{
                 return errors;
             }
             return errors;
+        }
+
+        private Comment MapRequestToComment(CreateCommentRequest commRequest)
+        {
+            return new Comment
+            {
+                PostId = commRequest.PostId,
+                Votes = 0,
+                AddedAt = DateTime.UtcNow,
+                Edited = false,
+                IsDeleted = false,
+                Content = commRequest.Content,
+                RepliedTo = commRequest.RepliedTo,
+                UserId = commRequest.UserId
+            };
         }
 
           public class ValidationResult<T>

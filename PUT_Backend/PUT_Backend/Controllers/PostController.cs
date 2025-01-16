@@ -125,13 +125,13 @@ namespace PUT_Backend.Controllers
         }
 
         [HttpPost("{id}/comments")]
-        public async Task<ActionResult<Post>> CreateComment(string id, [FromBody] Comment newComm)
+        public async Task<ActionResult<Post>> CreateComment(string id, [FromBody] CreateCommentRequest newComm)
         {
             var result = await _commentService.CreateComment(id, newComm);
             if (!result.IsValid)
                 return BadRequest(result.Errors);
             else
-                return Ok(newComm);
+                return Ok(result);
         }
 
         [HttpPatch("{id}/comments/{id_comm}")]
