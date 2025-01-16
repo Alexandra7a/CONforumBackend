@@ -19,15 +19,20 @@ namespace PUT_Backend.Services
             return await _userRepository.GetUserByUsernameAsync(username);
         }
 
+        public async Task<User> GetUserByIdAsync(string userId)
+        {
+            return await _userRepository.GetUserByIdAsync(userId);
+        }
+
         public async Task<IEnumerable<User>> GetAllUsersAsync()
         {
             return await _userRepository.GetAllUsersAsync();
         }
 
-        public async Task<(User, UserData)> GetUserProfileAsync(string username)
+        public async Task<(User, UserData)> GetUserProfileAsync(string userId)
         {
-            // Fetch the user by username
-            var user = await _userRepository.GetUserByUsernameAsync(username);
+            // Fetch the user by userId
+            var user = await _userRepository.GetUserByIdAsync(userId);
             if (user == null) return (null, null);
 
             // Fetch the UserData linked to this user

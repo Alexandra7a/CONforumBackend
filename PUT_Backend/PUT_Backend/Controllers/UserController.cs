@@ -39,10 +39,21 @@ namespace PUT_Backend.Controllers
             return Ok(user);
         }
 
-        [HttpGet("profile/{username}")]
-        public async Task<ActionResult<object>> GetUserProfile(string username)
+        [HttpGet("id/{userId}")]
+        public async Task<ActionResult<User>> GetUserById(string userId)
         {
-            var (user, userData) = await _userService.GetUserProfileAsync(username);
+            var user = await _userService.GetUserByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+            return Ok(user);
+        }
+
+        [HttpGet("profile/{userId}")]
+        public async Task<ActionResult<object>> GetUserProfile(string userId)
+        {
+            var (user, userData) = await _userService.GetUserProfileAsync(userId);
 
             if (user == null || userData == null)
                 return NotFound("User profile not found.");
@@ -75,7 +86,5 @@ namespace PUT_Backend.Controllers
 
             return Ok(profile);
         }
-
-
     }
 }

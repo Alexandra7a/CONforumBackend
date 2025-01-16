@@ -19,6 +19,11 @@ namespace PUT_Backend.Repositories
             return await _users.Find(u => u.Username == username).FirstOrDefaultAsync();
         }
 
+        public async Task<User> GetUserByIdAsync(string userId)
+        {
+            return await _users.Find(u => u.Id == userId).FirstOrDefaultAsync();
+        }
+
         public async Task<IEnumerable<User>> GetAllUsersAsync()
         {
             return await _users.Find(_ => true).ToListAsync();
