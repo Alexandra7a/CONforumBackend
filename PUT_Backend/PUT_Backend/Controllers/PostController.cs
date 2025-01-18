@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using PUT_Backend.Models;
+using PUT_Backend.Services;
 
 namespace PUT_Backend.Controllers
 {
@@ -14,13 +15,15 @@ namespace PUT_Backend.Controllers
     {
         private readonly IPostService _postService;
         private readonly ICommentService _commentService;
+        private readonly IUserService _userService;
 
 
         private readonly int pageSize = 5;
-        public PostController(IPostService service, ICommentService commentService)
+        public PostController(IPostService service, ICommentService commentService, IUserService userService)
         {
             this._postService = service;
             this._commentService = commentService;
+            this._userService = userService;
         }
 
         [HttpGet("categories")]
@@ -59,8 +62,18 @@ namespace PUT_Backend.Controllers
             var result = await _postService.CreatePost(request);
             if (!result.IsValid)
                 return BadRequest(result.Errors);
-            else
-                return Ok(result.Post);
+            
+            var createdPostId = result.Post.Id;
+            try
+            {
+                await _userService.AddPostToUserAsync(request.UserId, createdPostId);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Failed to associate post with user: {ex.Message}");
+            }
+
+            return Ok(result.Post);
         }
 
         [HttpPut]

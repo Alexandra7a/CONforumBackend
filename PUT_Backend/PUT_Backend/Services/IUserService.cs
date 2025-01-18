@@ -10,5 +10,6 @@ namespace PUT_Backend.Services
         Task<(User, UserData)> GetUserProfileAsync(string username);
         Task AddUserDataAsync(UserData userData);
         Task UpdateUserDataAsync(string userId, UserData updatedData);
+        Task AddPostToUserAsync(string userId, string postId);
     }
 }

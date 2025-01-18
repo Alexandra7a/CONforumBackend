@@ -55,22 +55,46 @@ namespace PUT_Backend.Controllers
         {
             var (user, userData) = await _userService.GetUserProfileAsync(userId);
 
-            if (user == null || userData == null)
-                return NotFound("User profile not found.");
+            if (user == null)
+                return NotFound("User not found.");
+
+            if (userData == null)
+            {
+                userData = new UserData
+                {
+                    UserId = userId,
+                    PostsIds = new List<string>(),
+                    LikedPostsIds = new List<string>(),
+                    CommentsIds = new List<string>(),
+                    StinksNr = 0
+                };
+
+                await _userService.AddUserDataAsync(userData);
+            }
 
             Console.WriteLine($"PostsIds: {string.Join(", ", userData.PostsIds)}");
 
-            if (userData.PostsIds == null || !userData.PostsIds.Any())
-                return NotFound("No posts associated with the user.");
+            var userPosts = Array.Empty<object>();
+            var likedPosts = Array.Empty<object>();
+            var comments = Array.Empty<object>();
 
-            var userPostsTasks = userData.PostsIds.Select(id => _postService.GetPostByIdAsync(id));
-            var userPosts = await Task.WhenAll(userPostsTasks);
+            if (userData.PostsIds != null && userData.PostsIds.Any())
+            {
+                var userPostsTasks = userData.PostsIds.Select(id => _postService.GetPostByIdAsync(id));
+                userPosts = await Task.WhenAll(userPostsTasks);
+            }
 
-            var likedPostsTasks = userData.LikedPostsIds.Select(id => _postService.GetPostByIdAsync(id));
-            var likedPosts = await Task.WhenAll(likedPostsTasks);
+            if (userData.LikedPostsIds != null && userData.LikedPostsIds.Any())
+            {
+                var likedPostsTasks = userData.LikedPostsIds.Select(id => _postService.GetPostByIdAsync(id));
+                likedPosts = await Task.WhenAll(likedPostsTasks);
+            }
 
-            var commentsTasks = userData.CommentsIds.Select(id => _commentService.GetCommentByIdAsync(id));
-            var comments = await Task.WhenAll(commentsTasks);
+            if (userData.CommentsIds != null && userData.CommentsIds.Any())
+            {
+                var commentsTasks = userData.CommentsIds.Select(id => _commentService.GetCommentByIdAsync(id));
+                comments = await Task.WhenAll(commentsTasks);
+            }
 
             var profile = new
             {
@@ -86,5 +110,7 @@ namespace PUT_Backend.Controllers
 
             return Ok(profile);
         }
+
+
     }
 }

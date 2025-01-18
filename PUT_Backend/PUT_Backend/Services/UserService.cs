@@ -50,5 +50,27 @@ namespace PUT_Backend.Services
         {
             await _userDataRepository.UpdateUserDataAsync(userId, updatedData);
         }
+
+        public async Task AddPostToUserAsync(string userId, string postId)
+        {
+            var userData = await _userDataRepository.GetByUserIdAsync(userId);
+
+            if (userData == null)
+            {
+                throw new Exception($"User data for user ID {userId} not found.");
+            }
+
+            if (userData.PostsIds == null)
+            {
+                userData.PostsIds = new List<string>();
+            }
+
+            if (!userData.PostsIds.Contains(postId))
+            {
+                userData.PostsIds.Add(postId);
+                await _userDataRepository.UpdateUserDataAsync(userId, userData);
+            }
+        }
+
     }
 }
