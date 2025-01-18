@@ -81,7 +81,9 @@ namespace PUT_Backend.Controllers
             if (userData.PostsIds != null && userData.PostsIds.Any())
             {
                 var userPostsTasks = userData.PostsIds.Select(id => _postService.GetPostByIdAsync(id));
-                userPosts = await Task.WhenAll(userPostsTasks);
+                var allPosts = await Task.WhenAll(userPostsTasks);
+
+                userPosts = allPosts.Where(post => post != null && !post.Anonim).ToArray();
             }
 
             if (userData.LikedPostsIds != null && userData.LikedPostsIds.Any())
