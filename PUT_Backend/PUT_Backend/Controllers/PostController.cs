@@ -143,8 +143,18 @@ namespace PUT_Backend.Controllers
             var result = await _commentService.CreateComment(id, newComm);
             if (!result.IsValid)
                 return BadRequest(result.Errors);
-            else
-                return Ok(result);
+            
+            var createdCommentId = result.Entity.Id;
+            try
+            {
+                await _userService.AddCommentToUserAsync(newComm.UserId, createdCommentId);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Failed to associate comment with user: {ex.Message}");
+            }
+
+            return Ok(result);
         }
 
         [HttpPatch("{id}/comments/{id_comm}")]

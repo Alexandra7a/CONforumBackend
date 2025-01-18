@@ -11,5 +11,6 @@ namespace PUT_Backend.Services
         Task AddUserDataAsync(UserData userData);
         Task UpdateUserDataAsync(string userId, UserData updatedData);
         Task AddPostToUserAsync(string userId, string postId);
+        Task AddCommentToUserAsync(string userId, string commentId);
     }
 }

@@ -31,11 +31,9 @@ namespace PUT_Backend.Services
 
         public async Task<(User, UserData)> GetUserProfileAsync(string userId)
         {
-            // Fetch the user by userId
             var user = await _userRepository.GetUserByIdAsync(userId);
             if (user == null) return (null, null);
 
-            // Fetch the UserData linked to this user
             var userData = await _userDataRepository.GetByUserIdAsync(user.Id);
 
             return (user, userData);
@@ -72,5 +70,31 @@ namespace PUT_Backend.Services
             }
         }
 
+        public async Task AddCommentToUserAsync(string userId, string commentId)
+        {
+            var userData = await _userDataRepository.GetByUserIdAsync(userId);
+
+            if (userData == null)
+            {
+                userData = new UserData
+                {
+                    UserId = userId,
+                    CommentsIds = new List<string> { commentId },
+                    PostsIds = new List<string>(),
+                    LikedPostsIds = new List<string>(),
+                    StinksNr = 0
+                };
+
+                await _userDataRepository.AddUserDataAsync(userData);
+            }
+            else
+            {
+                if (!userData.CommentsIds.Contains(commentId))
+                {
+                    userData.CommentsIds.Add(commentId);
+                    await _userDataRepository.UpdateUserDataAsync(userId, userData);
+                }
+            }
+        }
     }
 }
