@@ -32,3 +32,6 @@ We kept our database remotely in MongoDB Atlas (MongoDB's cloud service), connec
 ## Technologies
 - C#, ASP.NET Core
 - MongoDB, Compass MongoDB
+
+##Diagrams
+doc/DomainClassDiagram.png
