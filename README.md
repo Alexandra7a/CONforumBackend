@@ -33,6 +33,6 @@ We kept our database remotely in MongoDB Atlas (MongoDB's cloud service), connec
 - C#, ASP.NET Core
 - MongoDB, Compass MongoDB
 
-##Diagrams
-- In * doc/DomainClassDiagram.png*  is showen how the domain entityes work together, how the user is in center of all the tasks
-- In doc/
+## Diagrams
+- In * doc/DomainClassDiagram.png*  is shown how the domain entityes work together, how the user is in center of all the tasks
+- In doc/LayeredArchitectureClassDiagram.png the layered architecture is shown and methods contained are mentioned 
