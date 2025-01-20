@@ -34,4 +34,5 @@ We kept our database remotely in MongoDB Atlas (MongoDB's cloud service), connec
 - MongoDB, Compass MongoDB
 
 ##Diagrams
-doc/DomainClassDiagram.png
+- In * doc/DomainClassDiagram.png*  is showen how the domain entityes work together, how the user is in center of all the tasks
+- In doc/
